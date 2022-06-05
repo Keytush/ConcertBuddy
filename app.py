@@ -452,24 +452,24 @@ def loginUser(email, password):
     user = u.tupleToUser(items[0])
     return user
 
+# Get all the users in given event except the logged-in user
+def getUsersBasedOnHobbies(event_id, user_id):
+    db.openDatabase()
+    items = db.getEvent(event_id)
+    if not items:
+        return f"Event with ID {event_id} was not found"
 
-# def getUsersBasedOnHobbies(event_id, user_id):
-#     db.openDatabase()
-#     items = db.getEvent(event_id)
-#     if not items:
-#         return f"Event with ID {event_id} was not found"
-#
-#     items = db.getUser(user_id)
-#     if not items:
-#         return f"User with ID {user_id} was not found"
-#
-#     items = db.getUsersBasedOnHobbies(event_id, user_id)
-#     db.closeDatabase()
-#     if not items:
-#         return f"Event {event_id} does not contain any users"
-#
-#     users = []
-#     for item in items:
-#         users.append(u.tupleToFriend(item))
-#
-#     return users
+    items = db.getUser(user_id)
+    if not items:
+        return f"User with ID {user_id} was not found"
+
+    items = db.getUsersBasedOnHobbies(event_id, user_id)
+    db.closeDatabase()
+    if not items:
+        return f"Event {event_id} does not contain any users"
+
+    users = []
+    for item in items:
+        users.append(u.tupleToFriend(item))
+
+    return users

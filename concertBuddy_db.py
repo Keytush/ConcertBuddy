@@ -5,7 +5,7 @@ global cur
 def openDatabase():
     global conn
     global cur
-    conn = sqlite3.connect('ConcertBuddy_edit.db')
+    conn = sqlite3.connect('ConcertBuddy.db')
     cur = conn.cursor()
 
 def closeDatabase():
@@ -208,17 +208,17 @@ def loginUser(email, password):
     cur.execute('SELECT * FROM user WHERE email=? AND password=?', (email, password,))
     return cur.fetchall()
 
-# # Show users based on hobbies in event
-# def getUsersBasedOnHobbies(event_id, user_id):
-#     cur.execute('SELECT *, (SELECT count(hobby_id) '
-#                 'FROM (SELECT hobby_id '
-#                 'FROM (SELECT hobby_id FROM user_hobby WHERE user_id =: user_id '
-#                 'UNION ALL SELECT hobby_id FROM user_hobby WHERE user_id = u1.id) '
-#                 'GROUP BY hobby_id HAVING count(hobby_id) > 1)) match_friend '
-#                 'FROM user u1 '
-#                 'JOIN user_event ON u1.id = user_event.user_id '
-#                 'WHERE user_event.event_id=: event_id '
-#                 'AND u1.id NOT IN (:user_id) '
-#                 'ORDER BY match_friend DESC', {"user_id": user_id, "event_id": event_id})
-#     return cur.fetchall()
+# Show users based on hobbies in event
+def getUsersBasedOnHobbies(event_id, user_id):
+    cur.execute('SELECT *, (SELECT count(hobby_id) '
+                'FROM (SELECT hobby_id '
+                'FROM (SELECT hobby_id FROM user_hobby WHERE user_id =:user_id '
+                'UNION ALL SELECT hobby_id FROM user_hobby WHERE user_id = u1.id) '
+                'GROUP BY hobby_id HAVING count(hobby_id) > 1)) match_friend '
+                'FROM user u1 '
+                'JOIN user_event ON u1.id = user_event.user_id '
+                'WHERE user_event.event_id=:event_id '
+                'AND u1.id NOT IN (:user_id) '
+                'ORDER BY match_friend DESC', {"user_id": user_id, "event_id": event_id})
+    return cur.fetchall()
 

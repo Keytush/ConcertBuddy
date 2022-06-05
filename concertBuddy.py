@@ -298,14 +298,32 @@ class FriendAPI(Resource):
 @cbuddy_api.route('/user/<user_id>/attends/<event_id>')
 class UserEventAPI(Resource):
     def post(self, user_id, event_id):
+        """
+        Insert user's id and event's id into relational table user_event
+        :param user_id: An id of user
+        :param event_id:An id of event
+        :return: String message
+        """
         message = my_app.addUserToEvent(user_id, event_id)
         return jsonify(message)
 
     def delete(self, user_id, event_id):
+        """
+        Remove user's id and event's id from relational table user_event
+        :param user_id: An id of user
+        :param event_id: An id of event
+        :return: String message
+        """
         message = my_app.removeUserFromEvent(user_id, event_id)
         return jsonify(message)
 
     def get(self, user_id, event_id):
+        """
+        Get event from user
+        :param user_id: An id of user
+        :param event_id: An id of event
+        :return: Event object
+        """
         event = my_app.getEventInUser(user_id, event_id)
         return jsonify(event)
 
@@ -313,6 +331,11 @@ class UserEventAPI(Resource):
 @cbuddy_api.route('/user/<user_id>/attends/events')
 class UserEventsAPI(Resource):
     def get(self, user_id):
+        """
+        Get events from user
+        :param user_id: Id of user
+        :return: List of event objects
+        """
         events = my_app.getEventsInUser(user_id)
         return jsonify(events)
 
@@ -320,6 +343,12 @@ class UserEventsAPI(Resource):
 @cbuddy_api.route('/event/<event_id>/has/<user_id>')
 class UserEventAPI(Resource):
     def get(self, event_id, user_id):
+        """
+        Get user from event
+        :param event_id: Id of event
+        :param user_id: Id of user
+        :return: User object
+        """
         user = my_app.getUserInEvent(user_id, event_id)
         return jsonify(user)
 
@@ -327,35 +356,58 @@ class UserEventAPI(Resource):
 @cbuddy_api.route('/event/<event_id>/has/users')
 class UsersEventAPI(Resource):
     def get(self, event_id):
+        """
+        Get users from event
+        :param event_id: Id of event
+        :return: User object
+        """
         users = my_app.getUsersInEvent(event_id)
         return jsonify(users)
 
 
-# @cbuddy_api.route('/event/<event_id>/has/users/<user_id>')
-# class UsersEventAPI(Resource):
-#     def get(self, event_id, user_id):
-#         """
-#         Get all the users in given event except the logged-in user
-#         :param event_id:
-#         :param user_id:
-#         :return:
-#         """
-#         users = my_app.getUsersBasedOnHobbies(event_id, user_id)
-#         return jsonify(users)
+@cbuddy_api.route('/event/<event_id>/has/users/<user_id>')
+class UsersEventAPI(Resource):
+    def get(self, event_id, user_id):
+        """
+        Get all the users in given event except the logged-in user
+        :param event_id: Event's id
+        :param user_id: Logged-in user's id
+        :return:
+        """
+        users = my_app.getUsersBasedOnHobbies(event_id, user_id)
+        return jsonify(users)
 
 
 # User Hobby
 @cbuddy_api.route('/user/<user_id>/has/<hobby_id>')
 class UserHobbyAPI(Resource):
     def post(self, user_id, hobby_id):
+        """
+        Insert user id and hobby id into relational table user_hobby
+        :param user_id:
+        :param hobby_id:
+        :return: String message
+        """
         message = my_app.addHobbyToUser(user_id, hobby_id)
         return jsonify(message)
 
     def delete(self, user_id, hobby_id):
+        """
+        Remove user id and hobby id into relational table user_hobby
+        :param user_id:
+        :param hobby_id:
+        :return: String message
+        """
         message = my_app.removeHobbyFromUser(user_id, hobby_id)
         return jsonify(message)
 
     def get(self, user_id, hobby_id):
+        """
+        Get user's hobby
+        :param user_id:
+        :param hobby_id:
+        :return: Hobby object
+        """
         hobby = my_app.getHobbyInUser(user_id, hobby_id)
         return jsonify(hobby)
 
@@ -363,6 +415,11 @@ class UserHobbyAPI(Resource):
 @cbuddy_api.route('/user/<user_id>/has/hobbies')
 class UserHobbiesAPI(Resource):
     def get(self, user_id):
+        """
+        Get user's hobbies
+        :param user_id:
+        :return: List of hobby objects
+        """
         hobbies = my_app.getHobbiesInUser(user_id)
         return jsonify(hobbies)
 
@@ -374,6 +431,10 @@ class RegisterUserAPI(Resource):
     @cbuddy_api.doc(parser = register_user_parser)
     # Add a user
     def post(self):
+        """
+        Register user, by nickname, email and password
+        :return: Registered user object
+        """
         # get the post parameters
         args = register_user_parser.parse_args()
 
@@ -390,6 +451,10 @@ class LoginUserAPI(Resource):
     @cbuddy_api.doc(parser = login_user_parser)
     # Add a user
     def get(self):
+        """
+        Log-in user; check if he exists
+        :return: User object
+        """
         # get the post parameters
         args = login_user_parser.parse_args()
         user = my_app.loginUser(args['email'], args['password'])
